@@ -1,8 +1,5 @@
 function cachingDecoratorNew(func) {
-  let cache = [
-    { hash: "10,20,30", value: 60 },
-    { hash: "2,2,2", value: 6 },
-  ];
+  let cache = [];
 
   function wrapper(...args) {
     const hash = args.join(',');
@@ -28,7 +25,10 @@ function debounceDecoratorNew(func, ms) {
   let timerId;
 
   return function wrapper(...args) {
-    func.apply(this, args);
+    if (timerId == undefined) {
+      func.apply(this, args);
+    }
+
 
     clearTimeout(timerId);
 
@@ -45,8 +45,10 @@ function debounceDecorator2(func) {
   let timerId;
   wrapper.count = 0;
   return function wrapper(...args) {
-    wrapper.count++;
-    func.apply(this, args);
+    if (timerId == undefined) {
+      func.apply(this, args);
+      wrapper.count++;
+    }
 
     clearTimeout(timerId);
 
